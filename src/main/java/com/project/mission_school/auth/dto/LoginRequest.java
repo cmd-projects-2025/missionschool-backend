@@ -1,4 +1,5 @@
-package com.example.demo.dto;
+package com.project.mission_school.auth.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
