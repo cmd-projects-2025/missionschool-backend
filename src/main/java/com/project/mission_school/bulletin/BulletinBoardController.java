@@ -49,4 +49,14 @@ public class BulletinBoardController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Long id) {
+        try {
+            bulletinBoardService.deleteBoard(id);
+            return ResponseEntity.ok("게시글 삭제 완료!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
