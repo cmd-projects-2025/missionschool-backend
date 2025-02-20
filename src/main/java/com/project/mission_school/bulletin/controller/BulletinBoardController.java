@@ -6,6 +6,8 @@ import com.project.mission_school.bulletin.entity.BulletinBoard;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,9 +18,23 @@ public class BulletinBoardController {
     private final BulletinBoardService bulletinBoardService;
 
     @GetMapping
-    public ResponseEntity<List<BulletinBoard>> getAllBoard() {
+    public ResponseEntity<List<BulletinBoardDto>> getAllBoard() {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
-        return ResponseEntity.ok(boardList);
+
+        List<BulletinBoardDto> boardDtoList = boardList.stream().map(board -> {
+            BulletinBoardDto boarddto = new BulletinBoardDto();
+            boarddto.setWriterId(board.getWriterId());
+            boarddto.setPrice(board.getPrice());
+            boarddto.setTitle(board.getTitle());
+            boarddto.setDescription(board.getDescription());
+            boarddto.setBulletinState(board.getBulletinState());
+            boarddto.setViewCnt(board.getViewCnt());
+            boarddto.setCreatedAt(board.getCreatedAt());
+            boarddto.setUpdatedAt(board.getUpdatedAt());
+            return boarddto;
+        }).toList();
+
+        return ResponseEntity.ok(boardDtoList);
     }
 
     @GetMapping("/view/{id}")
