@@ -1,4 +1,4 @@
-package com.project.mission_school.entity;
+package com.project.mission_school.bulletin;
 
 import jakarta.persistence.*;
 import lombok.*;
