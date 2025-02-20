@@ -1,5 +1,6 @@
 package com.project.mission_school.bulletin.controller;
 
+import com.project.mission_school.bulletin.dto.BulletinBoardDto;
 import com.project.mission_school.bulletin.service.BulletinBoardService;
 import com.project.mission_school.bulletin.entity.BulletinBoard;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,21 @@ public class BulletinBoardController {
     }
 
     @PostMapping("/write")
-    public ResponseEntity<String> writeBoard(@RequestBody BulletinBoard postboard) {
+    public ResponseEntity<String> writeBoard(@RequestBody BulletinBoardDto postDto) {
         try {
+            BulletinBoard postboard = new BulletinBoard();
+
+            postboard.setWriterId(postDto.getWriterId());
+            postboard.setPrice(postDto.getPrice());
+            postboard.setTitle(postDto.getTitle());
+            postboard.setDescription(postDto.getDescription());
+
             postboard.setCreatedAt(LocalDateTime.now());
             postboard.setViewCnt(0);
+            postboard.setBulletinState(true);
+
             bulletinBoardService.saveBoard(postboard);
+
             return ResponseEntity.ok("게시글 작성 완료!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
