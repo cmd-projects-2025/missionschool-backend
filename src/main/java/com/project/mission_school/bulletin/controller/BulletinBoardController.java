@@ -40,10 +40,6 @@ public class BulletinBoardController {
             postboard.setTitle(postDto.getTitle());
             postboard.setDescription(postDto.getDescription());
 
-            postboard.setCreatedAt(LocalDateTime.now());
-            postboard.setViewCnt(0);
-            postboard.setBulletinState(true);
-
             bulletinBoardService.saveBoard(postboard);
 
             return ResponseEntity.ok("게시글 작성 완료!");
