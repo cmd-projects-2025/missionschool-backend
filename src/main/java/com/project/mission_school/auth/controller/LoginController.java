@@ -29,11 +29,11 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtUtill.generateToken(request.getUsername());
+            String token = jwtUtill.generateToken(request.getEmail());
 
             response.setHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; Secure; Path=/; SameSite=Strict");
 
