@@ -1,5 +1,7 @@
-package com.project.mission_school.bulletin;
+package com.project.mission_school.bulletin.controller;
 
+import com.project.mission_school.bulletin.service.BulletinBoardService;
+import com.project.mission_school.bulletin.entity.BulletinBoard;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
