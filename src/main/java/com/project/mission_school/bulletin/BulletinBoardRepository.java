@@ -1,6 +1,5 @@
-package com.project.mission_school.repository;
+package com.project.mission_school.bulletin;
 
-import com.project.mission_school.entity.BulletinBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
