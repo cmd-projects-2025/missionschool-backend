@@ -20,6 +20,13 @@ public class BulletinBoardController {
         return ResponseEntity.ok(boardList);
     }
 
+    @GetMapping("/view/{id}")
+    public ResponseEntity<BulletinBoard> getBoardById(@PathVariable Long id) {
+        BulletinBoard board = bulletinBoardService.getBoardById(id);
+        bulletinBoardService.increaseViewCount(id);
+        return ResponseEntity.ok(board);
+    }
+
     @PostMapping("/write")
     public ResponseEntity<String> writeBoard(@RequestBody BulletinBoard postboard) {
         try {
