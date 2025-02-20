@@ -21,26 +21,37 @@ public class BulletinBoardController {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
 
         List<BulletinBoardDto> boardDtoList = boardList.stream().map(board -> {
-            BulletinBoardDto boarddto = new BulletinBoardDto();
-            boarddto.setWriterId(board.getWriterId());
-            boarddto.setPrice(board.getPrice());
-            boarddto.setTitle(board.getTitle());
-            boarddto.setDescription(board.getDescription());
-            boarddto.setBulletinState(board.getBulletinState());
-            boarddto.setViewCnt(board.getViewCnt());
-            boarddto.setCreatedAt(board.getCreatedAt());
-            boarddto.setUpdatedAt(board.getUpdatedAt());
-            return boarddto;
+            BulletinBoardDto dto = new BulletinBoardDto();
+            dto.setWriterId(board.getWriterId());
+            dto.setPrice(board.getPrice());
+            dto.setTitle(board.getTitle());
+            dto.setDescription(board.getDescription());
+            dto.setBulletinState(board.getBulletinState());
+            dto.setViewCnt(board.getViewCnt());
+            dto.setCreatedAt(board.getCreatedAt());
+            dto.setUpdatedAt(board.getUpdatedAt());
+            return dto;
         }).toList();
 
         return ResponseEntity.ok(boardDtoList);
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<BulletinBoard> getBoardById(@PathVariable Long id) {
+    public ResponseEntity<BulletinBoardDto> getBoardById(@PathVariable Long id) {
         BulletinBoard board = bulletinBoardService.getBoardById(id);
         bulletinBoardService.increaseViewCount(id);
-        return ResponseEntity.ok(board);
+
+        BulletinBoardDto dto = new BulletinBoardDto();
+        dto.setWriterId(board.getWriterId());
+        dto.setPrice(board.getPrice());
+        dto.setTitle(board.getTitle());
+        dto.setDescription(board.getDescription());
+        dto.setBulletinState(board.getBulletinState());
+        dto.setViewCnt(board.getViewCnt());
+        dto.setCreatedAt(board.getCreatedAt());
+        dto.setUpdatedAt(board.getUpdatedAt());
+
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/write")
