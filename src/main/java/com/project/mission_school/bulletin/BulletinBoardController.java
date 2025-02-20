@@ -39,4 +39,14 @@ public class BulletinBoardController {
         }
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateBoard(@PathVariable Long id, @RequestBody BulletinBoard updateBoard) {
+        try {
+            bulletinBoardService.updateBoard(id, updateBoard.getTitle(), updateBoard.getDescription());
+            return ResponseEntity.ok("게시글 수정 완료!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
