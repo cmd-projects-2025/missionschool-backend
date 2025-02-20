@@ -1,5 +1,7 @@
-package com.project.mission_school.bulletin;
+package com.project.mission_school.bulletin.service;
 
+import com.project.mission_school.bulletin.entity.BulletinBoard;
+import com.project.mission_school.bulletin.repository.BulletinBoardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
