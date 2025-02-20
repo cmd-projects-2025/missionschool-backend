@@ -6,8 +6,6 @@ import com.project.mission_school.bulletin.entity.BulletinBoard;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
