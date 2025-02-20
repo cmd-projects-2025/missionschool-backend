@@ -1,35 +1,31 @@
 package com.project.mission_school.auth.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.project.mission_school.auth.dto.SignupRequest;
 import com.project.mission_school.auth.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class SignupController {
 
     private final UserService userService;
-    
-    @GetMapping("/signup")
-    public ModelAndView showSignupForm() {
-        return new ModelAndView("signup");
-    }   
-    
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupRequest request) {
-        userService.registerUser(request.getUsername(), request.getPassword());
-        return ResponseEntity.ok("회원가입 성공: " + request.getUsername());
+        try {
+            userService.registerUser(request.getUsername(), request.getPassword());
+            return ResponseEntity.ok("회원가입 성공: " + request.getUsername());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패");
+        }
     }
-    
 }
