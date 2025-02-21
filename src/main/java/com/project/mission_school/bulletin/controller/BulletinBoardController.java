@@ -21,6 +21,7 @@ public class BulletinBoardController {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
 
         List<BulletinBoardDto> boardDtoList = boardList.stream().map(board -> {
+
             BulletinBoardDto dto = new BulletinBoardDto();
             dto.setWriterId(board.getWriterId());
             dto.setPrice(board.getPrice());
@@ -55,22 +56,33 @@ public class BulletinBoardController {
     }
 
     @PostMapping("/write")
-    public ResponseEntity<String> writeBoard(@RequestBody BulletinBoardDto postDto) {
+    public ResponseEntity<BulletinBoardDto> writeBoard(@RequestBody BulletinBoardDto postDto) {
         try {
-            bulletinBoardService.saveBoard(postDto);
-            return ResponseEntity.ok("게시글 작성 완료!");
+            BulletinBoard savedBoard = bulletinBoardService.saveBoard(postDto);
+
+            BulletinBoardDto dto = new BulletinBoardDto();
+            dto.setWriterId(savedBoard.getWriterId());
+            dto.setPrice(savedBoard.getPrice());
+            dto.setTitle(savedBoard.getTitle());
+            dto.setDescription(savedBoard.getDescription());
+            dto.setBulletinState(savedBoard.getBulletinState());
+            dto.setViewCnt(savedBoard.getViewCnt());
+            dto.setCreatedAt(savedBoard.getCreatedAt());
+            dto.setUpdatedAt(savedBoard.getUpdatedAt());
+
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateBoard(@PathVariable Long id, @RequestBody BulletinBoardDto updateDto) {
+    public ResponseEntity<BulletinBoard> updateBoard(@PathVariable Long id, @RequestBody BulletinBoardDto updateDto) {
         try {
-            bulletinBoardService.updateBoard(id, updateDto.getTitle(), updateDto.getDescription());
-            return ResponseEntity.ok("게시글 수정 완료!");
+            BulletinBoard updateBoard = bulletinBoardService.updateBoard(id, updateDto.getTitle(), updateDto.getDescription());
+            return ResponseEntity.ok(updateBoard);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
