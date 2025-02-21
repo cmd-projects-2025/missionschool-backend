@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,20 +20,9 @@ public class BulletinBoardController {
     @GetMapping
     public ResponseEntity<List<BulletinBoardDto>> getAllBoard() {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
-
-        List<BulletinBoardDto> boardDtoList = boardList.stream().map(board -> {
-
-            BulletinBoardDto dto = new BulletinBoardDto();
-            dto.setWriterId(board.getWriterId());
-            dto.setPrice(board.getPrice());
-            dto.setTitle(board.getTitle());
-            dto.setDescription(board.getDescription());
-            dto.setBulletinState(board.getBulletinState());
-            dto.setViewCnt(board.getViewCnt());
-            dto.setCreatedAt(board.getCreatedAt());
-            dto.setUpdatedAt(board.getUpdatedAt());
-            return dto;
-        }).toList();
+        List<BulletinBoardDto> boardDtoList = boardList.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(boardDtoList);
     }
@@ -41,36 +31,14 @@ public class BulletinBoardController {
     public ResponseEntity<BulletinBoardDto> getBoardById(@PathVariable Long id) {
         BulletinBoard board = bulletinBoardService.getBoardById(id);
         bulletinBoardService.increaseViewCount(id);
-
-        BulletinBoardDto dto = new BulletinBoardDto();
-        dto.setWriterId(board.getWriterId());
-        dto.setPrice(board.getPrice());
-        dto.setTitle(board.getTitle());
-        dto.setDescription(board.getDescription());
-        dto.setBulletinState(board.getBulletinState());
-        dto.setViewCnt(board.getViewCnt());
-        dto.setCreatedAt(board.getCreatedAt());
-        dto.setUpdatedAt(board.getUpdatedAt());
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(convertToDto(board));
     }
 
     @PostMapping("/write")
     public ResponseEntity<BulletinBoardDto> writeBoard(@RequestBody BulletinBoardDto postDto) {
         try {
             BulletinBoard savedBoard = bulletinBoardService.saveBoard(postDto);
-
-            BulletinBoardDto dto = new BulletinBoardDto();
-            dto.setWriterId(savedBoard.getWriterId());
-            dto.setPrice(savedBoard.getPrice());
-            dto.setTitle(savedBoard.getTitle());
-            dto.setDescription(savedBoard.getDescription());
-            dto.setBulletinState(savedBoard.getBulletinState());
-            dto.setViewCnt(savedBoard.getViewCnt());
-            dto.setCreatedAt(savedBoard.getCreatedAt());
-            dto.setUpdatedAt(savedBoard.getUpdatedAt());
-
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(convertToDto(savedBoard));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -94,6 +62,19 @@ public class BulletinBoardController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    private BulletinBoardDto convertToDto(BulletinBoard board) {
+        return BulletinBoardDto.builder()
+                .writerId(board.getWriterId())
+                .price(board.getPrice())
+                .title(board.getTitle())
+                .description(board.getDescription())
+                .bulletinState(board.getBulletinState())
+                .viewCnt(board.getViewCnt())
+                .createdAt(board.getCreatedAt())
+                .updatedAt(board.getUpdatedAt())
+                .build();
     }
 
 }
