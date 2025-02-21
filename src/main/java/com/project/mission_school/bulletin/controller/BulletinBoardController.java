@@ -57,15 +57,7 @@ public class BulletinBoardController {
     @PostMapping("/write")
     public ResponseEntity<String> writeBoard(@RequestBody BulletinBoardDto postDto) {
         try {
-            BulletinBoard postboard = new BulletinBoard();
-
-            postboard.setWriterId(postDto.getWriterId());
-            postboard.setPrice(postDto.getPrice());
-            postboard.setTitle(postDto.getTitle());
-            postboard.setDescription(postDto.getDescription());
-
-            bulletinBoardService.saveBoard(postboard);
-
+            bulletinBoardService.saveBoard(postDto);
             return ResponseEntity.ok("게시글 작성 완료!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
