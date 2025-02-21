@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "users")
 @Entity
-public class User implements UserDetails {
+public class MypageUser implements UserDetails {
     @Id
     private Long id;
 
@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private String phonenumber;
 
     @Builder
-    public User(String username, String password, String role, String phonenumber) {
+    public MypageUser(String username, String password, String role, String phonenumber) {
         this.username = username;
         this.password = password;
         this.role = (role != null) ? role : "USER";
