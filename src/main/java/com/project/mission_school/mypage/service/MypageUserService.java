@@ -1,11 +1,13 @@
 package com.project.mission_school.mypage.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.mission_school.mypage.repository.MypageUserRepository;
 import com.project.mission_school.mypage.entity.MypageUser;
+import com.project.mission_school.mypage.repository.MypageUserRepository;
 
 @Service
 public class MypageUserService {
@@ -15,6 +17,11 @@ public class MypageUserService {
     public MypageUserService(MypageUserRepository mypageUserRepository, BCryptPasswordEncoder passwordEncoder) {
         this.mypageUserRepository = mypageUserRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public MypageUser findByUsername(String username) {
+        Optional<MypageUser> user = mypageUserRepository.findByUsername(username);
+        return user.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
     @Transactional
