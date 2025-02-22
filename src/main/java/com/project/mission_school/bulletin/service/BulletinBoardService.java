@@ -1,5 +1,6 @@
 package com.project.mission_school.bulletin.service;
 
+import com.project.mission_school.bulletin.dto.BulletinBoardDto;
 import com.project.mission_school.bulletin.entity.BulletinBoard;
 import com.project.mission_school.bulletin.repository.BulletinBoardRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,11 +18,19 @@ public class BulletinBoardService {
     private final BulletinBoardRepository bulletinBoardRepository;
 
     @Transactional
-    public BulletinBoard saveBoard(BulletinBoard board) {
-        board.setCreatedAt(LocalDateTime.now());
-        board.setViewCnt(0);
-        board.setBulletinState(true);
-        return bulletinBoardRepository.save(board);
+    public BulletinBoard saveBoard(BulletinBoardDto postDto) {
+        BulletinBoard postboard = new BulletinBoard();
+
+        postboard.setWriterId(postDto.getWriterId());
+        postboard.setPrice(postDto.getPrice());
+        postboard.setTitle(postDto.getTitle());
+        postboard.setDescription(postDto.getDescription());
+
+        postboard.setCreatedAt(LocalDateTime.now());
+        postboard.setViewCnt(0);
+        postboard.setBulletinState(true);
+
+        return bulletinBoardRepository.save(postboard);
     }
 
     public List<BulletinBoard> getAllBoards() {
@@ -40,9 +49,9 @@ public class BulletinBoardService {
     }
 
     @Transactional
-    public BulletinBoard updateBoard(Long boardId, String title, String description) {
+    public BulletinBoard updateBoard(Long boardId, String writerId, Long price, String title, String description) {
         BulletinBoard board = getBoardById(boardId);
-        board.update(title, description);
+        board.update(writerId, price, title, description);
         board.setUpdatedAt(LocalDateTime.now());
         return board;
     }

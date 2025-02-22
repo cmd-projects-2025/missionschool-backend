@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,19 +20,9 @@ public class BulletinBoardController {
     @GetMapping
     public ResponseEntity<List<BulletinBoardDto>> getAllBoard() {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
-
-        List<BulletinBoardDto> boardDtoList = boardList.stream().map(board -> {
-            BulletinBoardDto dto = new BulletinBoardDto();
-            dto.setWriterId(board.getWriterId());
-            dto.setPrice(board.getPrice());
-            dto.setTitle(board.getTitle());
-            dto.setDescription(board.getDescription());
-            dto.setBulletinState(board.getBulletinState());
-            dto.setViewCnt(board.getViewCnt());
-            dto.setCreatedAt(board.getCreatedAt());
-            dto.setUpdatedAt(board.getUpdatedAt());
-            return dto;
-        }).toList();
+        List<BulletinBoardDto> boardDtoList = boardList.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(boardDtoList);
     }
@@ -40,45 +31,32 @@ public class BulletinBoardController {
     public ResponseEntity<BulletinBoardDto> getBoardById(@PathVariable Long id) {
         BulletinBoard board = bulletinBoardService.getBoardById(id);
         bulletinBoardService.increaseViewCount(id);
-
-        BulletinBoardDto dto = new BulletinBoardDto();
-        dto.setWriterId(board.getWriterId());
-        dto.setPrice(board.getPrice());
-        dto.setTitle(board.getTitle());
-        dto.setDescription(board.getDescription());
-        dto.setBulletinState(board.getBulletinState());
-        dto.setViewCnt(board.getViewCnt());
-        dto.setCreatedAt(board.getCreatedAt());
-        dto.setUpdatedAt(board.getUpdatedAt());
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(convertToDto(board));
     }
 
     @PostMapping("/write")
-    public ResponseEntity<String> writeBoard(@RequestBody BulletinBoardDto postDto) {
+    public ResponseEntity<BulletinBoardDto> writeBoard(@RequestBody BulletinBoardDto postDto) {
         try {
-            BulletinBoard postboard = new BulletinBoard();
-
-            postboard.setWriterId(postDto.getWriterId());
-            postboard.setPrice(postDto.getPrice());
-            postboard.setTitle(postDto.getTitle());
-            postboard.setDescription(postDto.getDescription());
-
-            bulletinBoardService.saveBoard(postboard);
-
-            return ResponseEntity.ok("게시글 작성 완료!");
+            BulletinBoard savedBoard = bulletinBoardService.saveBoard(postDto);
+            return ResponseEntity.ok(convertToDto(savedBoard));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateBoard(@PathVariable Long id, @RequestBody BulletinBoard updateBoard) {
+    public ResponseEntity<BulletinBoard> updateBoard(@PathVariable Long id, @RequestBody BulletinBoardDto updateDto) {
         try {
-            bulletinBoardService.updateBoard(id, updateBoard.getTitle(), updateBoard.getDescription());
-            return ResponseEntity.ok("게시글 수정 완료!");
+            BulletinBoard updateBoard = bulletinBoardService.updateBoard(
+                    id,
+                    updateDto.getWriterId(),
+                    updateDto.getPrice(),
+                    updateDto.getTitle(),
+                    updateDto.getDescription()
+            );
+            return ResponseEntity.ok(updateBoard);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
@@ -90,6 +68,19 @@ public class BulletinBoardController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    private BulletinBoardDto convertToDto(BulletinBoard board) {
+        return BulletinBoardDto.builder()
+                .writerId(board.getWriterId())
+                .price(board.getPrice())
+                .title(board.getTitle())
+                .description(board.getDescription())
+                .bulletinState(board.getBulletinState())
+                .viewCnt(board.getViewCnt())
+                .createdAt(board.getCreatedAt())
+                .updatedAt(board.getUpdatedAt())
+                .build();
     }
 
 }
