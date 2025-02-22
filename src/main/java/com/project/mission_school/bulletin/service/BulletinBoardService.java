@@ -49,9 +49,9 @@ public class BulletinBoardService {
     }
 
     @Transactional
-    public BulletinBoard updateBoard(Long boardId, String title, String description) {
+    public BulletinBoard updateBoard(Long boardId, String writerId, Long price, String title, String description) {
         BulletinBoard board = getBoardById(boardId);
-        board.update(title, description);
+        board.update(writerId, price, title, description);
         board.setUpdatedAt(LocalDateTime.now());
         return board;
     }
