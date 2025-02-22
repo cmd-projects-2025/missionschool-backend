@@ -47,7 +47,13 @@ public class BulletinBoardController {
     @PutMapping("/update/{id}")
     public ResponseEntity<BulletinBoard> updateBoard(@PathVariable Long id, @RequestBody BulletinBoardDto updateDto) {
         try {
-            BulletinBoard updateBoard = bulletinBoardService.updateBoard(id, updateDto.getTitle(), updateDto.getDescription());
+            BulletinBoard updateBoard = bulletinBoardService.updateBoard(
+                    id,
+                    updateDto.getWriterId(),
+                    updateDto.getPrice(),
+                    updateDto.getTitle(),
+                    updateDto.getDescription()
+            );
             return ResponseEntity.ok(updateBoard);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
