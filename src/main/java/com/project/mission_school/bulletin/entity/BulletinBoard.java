@@ -35,12 +35,4 @@ public class BulletinBoard {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    public void update(String writerId, Long price, String title, String description) {
-        this.writerId = writerId;
-        this.price = price;
-        this.title = title;
-        this.description = description;
-    }
-
 }
