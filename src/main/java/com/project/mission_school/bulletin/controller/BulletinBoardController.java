@@ -3,6 +3,8 @@ package com.project.mission_school.bulletin.controller;
 import com.project.mission_school.bulletin.dto.BulletinBoardDto;
 import com.project.mission_school.bulletin.service.BulletinBoardService;
 import com.project.mission_school.bulletin.entity.BulletinBoard;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +30,14 @@ public class BulletinBoardController {
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<BulletinBoardDto> getBoardById(@PathVariable Long id) {
-        BulletinBoard board = bulletinBoardService.getBoardById(id);
-        bulletinBoardService.increaseViewCount(id);
-        return ResponseEntity.ok(convertToDto(board));
+    public ResponseEntity<Object> getBoardById(@PathVariable Long id) {
+        try {
+            BulletinBoard board = bulletinBoardService.getBoardById(id);
+            bulletinBoardService.increaseViewCount(id);
+            return ResponseEntity.ok(convertToDto(board));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping("/write")
@@ -66,7 +72,7 @@ public class BulletinBoardController {
             bulletinBoardService.deleteBoard(id);
             return ResponseEntity.ok("게시글 삭제 완료!");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
