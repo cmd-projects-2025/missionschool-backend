@@ -60,6 +60,4 @@ public class BulletinBoardService {
     public void deleteBoard(Long boardId) {
         bulletinBoardRepository.deleteById(boardId);
     }
-
-
 }
