@@ -1,6 +1,5 @@
 package com.project.mission_school.bulletin.controller;
 
-import com.project.mission_school.bulletin.dto.BulletinBoardDto;
 import com.project.mission_school.bulletin.service.BulletinBoardService;
 import com.project.mission_school.bulletin.entity.BulletinBoard;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,13 +18,9 @@ public class BulletinBoardController {
     private final BulletinBoardService bulletinBoardService;
 
     @GetMapping
-    public ResponseEntity<List<BulletinBoardDto>> getAllBoard() {
+    public ResponseEntity<List<BulletinBoard>> getAllBoard() {
         List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
-        List<BulletinBoardDto> boardDtoList = boardList.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(boardDtoList);
+        return ResponseEntity.ok(boardList);
     }
 
     @GetMapping("/view/{id}")
@@ -34,33 +28,27 @@ public class BulletinBoardController {
         try {
             BulletinBoard board = bulletinBoardService.getBoardById(id);
             bulletinBoardService.increaseViewCount(id);
-            return ResponseEntity.ok(convertToDto(board));
+            return ResponseEntity.ok(board);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PostMapping("/write")
-    public ResponseEntity<BulletinBoardDto> writeBoard(@RequestBody BulletinBoardDto postDto) {
+    public ResponseEntity<BulletinBoard> writeBoard(@RequestBody BulletinBoard postboard) {
         try {
-            BulletinBoard savedBoard = bulletinBoardService.saveBoard(postDto);
-            return ResponseEntity.ok(convertToDto(savedBoard));
+            BulletinBoard savedBoard = bulletinBoardService.saveBoard(postboard);
+            return ResponseEntity.ok(savedBoard);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<BulletinBoard> updateBoard(@PathVariable Long id, @RequestBody BulletinBoardDto updateDto) {
+    public ResponseEntity<BulletinBoard> updateBoard(@PathVariable Long id, @RequestBody BulletinBoard updateBoard) {
         try {
-            BulletinBoard updateBoard = bulletinBoardService.updateBoard(
-                    id,
-                    updateDto.getWriterId(),
-                    updateDto.getPrice(),
-                    updateDto.getTitle(),
-                    updateDto.getDescription()
-            );
-            return ResponseEntity.ok(updateBoard);
+            BulletinBoard updatedBoard = bulletinBoardService.updateBoard(id, updateBoard);
+            return ResponseEntity.ok(updatedBoard);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -74,19 +62,6 @@ public class BulletinBoardController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
-    }
-
-    private BulletinBoardDto convertToDto(BulletinBoard board) {
-        return BulletinBoardDto.builder()
-                .writerId(board.getWriterId())
-                .price(board.getPrice())
-                .title(board.getTitle())
-                .description(board.getDescription())
-                .bulletinState(board.getBulletinState())
-                .viewCnt(board.getViewCnt())
-                .createdAt(board.getCreatedAt())
-                .updatedAt(board.getUpdatedAt())
-                .build();
     }
 
 }
