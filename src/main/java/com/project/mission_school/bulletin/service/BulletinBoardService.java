@@ -40,15 +40,15 @@ public class BulletinBoardService {
     }
 
     @Transactional
-    public void increaseViewCount(Long boardId) {
-        BulletinBoard board = getBoardById(boardId);
+    public void increaseViewCount(Long id) {
+        BulletinBoard board = getBoardById(id);
         board.setViewCnt(board.getViewCnt() + 1);
     }
 
     @Transactional
-    public BulletinBoard updateBoard(Long boardId, BulletinBoard updateBoard) {
+    public BulletinBoard updateBoard(Long id, BulletinBoard updateBoard) {
 
-        BulletinBoard updateboard = getBoardById(boardId);
+        BulletinBoard updateboard = getBoardById(id);
 
         updateboard.setWriterId(updateBoard.getWriterId());
         updateboard.setPrice(updateBoard.getPrice());
@@ -59,7 +59,7 @@ public class BulletinBoardService {
     }
 
     @Transactional
-    public void deleteBoard(Long boardId) {
-        bulletinBoardRepository.deleteById(boardId);
+    public void deleteBoard(Long id) {
+        bulletinBoardRepository.deleteById(id);
     }
 }
