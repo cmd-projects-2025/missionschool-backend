@@ -1,6 +1,5 @@
 package com.project.mission_school.bulletin.service;
 
-import com.project.mission_school.bulletin.dto.BulletinBoardDto;
 import com.project.mission_school.bulletin.entity.BulletinBoard;
 import com.project.mission_school.bulletin.repository.BulletinBoardRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,14 +17,12 @@ public class BulletinBoardService {
     private final BulletinBoardRepository bulletinBoardRepository;
 
     @Transactional
-    public BulletinBoard saveBoard(BulletinBoardDto postDto) {
-        BulletinBoard postboard = new BulletinBoard();
+    public BulletinBoard saveBoard(BulletinBoard postboard) {
 
-        postboard.setWriterId(postDto.getWriterId());
-        postboard.setPrice(postDto.getPrice());
-        postboard.setTitle(postDto.getTitle());
-        postboard.setDescription(postDto.getDescription());
-
+        postboard.setWriterId(postboard.getWriterId());
+        postboard.setPrice(postboard.getPrice());
+        postboard.setTitle(postboard.getTitle());
+        postboard.setDescription(postboard.getDescription());
         postboard.setCreatedAt(LocalDateTime.now());
         postboard.setViewCnt(0);
         postboard.setBulletinState(true);
@@ -49,20 +46,20 @@ public class BulletinBoardService {
     }
 
     @Transactional
-    public BulletinBoard updateBoard(Long boardId, String writerId, Long price, String title, String description) {
-        BulletinBoard board = getBoardById(boardId);
-        board.update(writerId, price, title, description);
-        board.setUpdatedAt(LocalDateTime.now());
-        return board;
+    public BulletinBoard updateBoard(Long boardId, BulletinBoard updateBoard) {
+
+        BulletinBoard updateboard = getBoardById(boardId);
+
+        updateboard.setWriterId(updateBoard.getWriterId());
+        updateboard.setPrice(updateBoard.getPrice());
+        updateboard.setTitle(updateBoard.getTitle());
+        updateboard.setDescription(updateBoard.getDescription());
+        updateboard.setUpdatedAt(LocalDateTime.now());
+        return bulletinBoardRepository.save(updateboard);
     }
 
     @Transactional
     public void deleteBoard(Long boardId) {
-        if (!bulletinBoardRepository.existsById(boardId)) {
-            throw new EntityNotFoundException("게시글이 존재하지 않습니다. ID: " + boardId);
-        }
         bulletinBoardRepository.deleteById(boardId);
     }
-
-
 }
