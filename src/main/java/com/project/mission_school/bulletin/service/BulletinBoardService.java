@@ -58,9 +58,6 @@ public class BulletinBoardService {
 
     @Transactional
     public void deleteBoard(Long boardId) {
-        if (!bulletinBoardRepository.existsById(boardId)) {
-            throw new EntityNotFoundException("게시글이 존재하지 않습니다. ID: " + boardId);
-        }
         bulletinBoardRepository.deleteById(boardId);
     }
 
