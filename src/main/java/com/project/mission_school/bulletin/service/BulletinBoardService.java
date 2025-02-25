@@ -27,6 +27,10 @@ public class BulletinBoardService {
         postboard.setViewCnt(0);
         postboard.setBulletinState(true);
 
+        if (postboard.getUrgent()) {
+            postboard.setUrgent(true);
+        }
+
         return bulletinBoardRepository.save(postboard);
     }
 
@@ -62,4 +66,10 @@ public class BulletinBoardService {
     public void deleteBoard(Long id) {
         bulletinBoardRepository.deleteById(id);
     }
+
+    @Transactional
+    public List<BulletinBoard> UrgentBoards() {
+        return bulletinBoardRepository.findByUrgentTrueOrderByCreatedAt();
+    }
+
 }

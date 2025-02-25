@@ -35,4 +35,6 @@ public class BulletinBoard {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private Boolean urgent = false;
 }
