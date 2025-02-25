@@ -39,18 +39,18 @@ public class User implements UserDetails {
     private String role;
 
     @Column(nullable = true)
-    private String phnumber;
+    private String phonenumber;
 
     @Column(nullable = true)
     private String village;
 
     @Builder
-    public User(String username, String password, String nickname, String role, String phnumber, String village) {
+    public User(String username, String password, String nickname, String role, String phonenumber, String village) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.role = (role != null) ? role : "USER";
-        this.phnumber = phnumber;
+        this.phonenumber = phonenumber;
         this.village = village;
     }
 

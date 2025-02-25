@@ -31,7 +31,7 @@ public class UserService {
             .username(request.getUsername())
             .password(encodedPassword)
             .nickname(request.getNickname())
-            .phnumber(request.getPhnumber())
+            .phonenumber(request.getPhonenumber())
             .village(request.getVillage())
             .build();
 
