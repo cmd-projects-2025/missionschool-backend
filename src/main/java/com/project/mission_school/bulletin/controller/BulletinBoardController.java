@@ -23,6 +23,12 @@ public class BulletinBoardController {
         return ResponseEntity.ok(boardList);
     }
 
+    @GetMapping("/urgent")
+    public ResponseEntity<List<BulletinBoard>> UrgentBoards() {
+        List<BulletinBoard> urgentBoardList = bulletinBoardService.UrgentBoards();
+        return ResponseEntity.ok(urgentBoardList);
+    }
+
     @GetMapping("/view/{id}")
     public ResponseEntity<Object> getBoardById(@PathVariable Long id) {
         try {
