@@ -22,10 +22,10 @@ public class SignupController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupRequest request) {
         try {
-            userService.registerUser(request.getEmail(), request.getPassword());
-            return ResponseEntity.ok("회원가입 성공: " + request.getEmail());
+            userService.registerUser(request);
+            return ResponseEntity.ok("회원가입 성공: " + request.getUsername());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + e.getMessage());
         }
     }
 }

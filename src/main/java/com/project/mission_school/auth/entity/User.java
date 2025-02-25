@@ -32,18 +32,26 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
     @Column(nullable = true)
     private String role;
 
-    @Column(nullable = true)
-    private String phonenumber;
+    @Column(nullable = false)
+    private String phnumber;
+
+    @Column(nullable = false)
+    private String village;
 
     @Builder
-    public User(String username, String password, String role, String phonenumber) {
+    public User(String username, String password, String nickname, String role, String phnumber, String village) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.role = (role != null) ? role : "USER";
-        this.phonenumber = phonenumber;
+        this.phnumber = phnumber;
+        this.village = village;
     }
 
     @Override
