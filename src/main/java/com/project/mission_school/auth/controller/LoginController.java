@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.mission_school.auth.dto.LoginRequest;
 import com.project.mission_school.auth.util.JwtUtill;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,18 +25,18 @@ public class LoginController {
     private final JwtUtill jwtUtill;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtUtill.generateToken(request.getEmail());
+            String token = jwtUtill.generateToken(request.getUsername());
 
-            response.setHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; Secure; Path=/; SameSite=Strict");
-
-            return ResponseEntity.ok("로그인 성공");
+            return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body("로그인 성공");
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 잘못되었습니다.");
         } catch (Exception e) {
