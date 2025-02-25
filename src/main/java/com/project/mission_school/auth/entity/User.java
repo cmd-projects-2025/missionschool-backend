@@ -38,10 +38,10 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String role;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phnumber;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String village;
 
     @Builder
