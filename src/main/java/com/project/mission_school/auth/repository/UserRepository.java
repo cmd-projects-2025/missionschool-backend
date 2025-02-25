@@ -9,4 +9,5 @@ import com.project.mission_school.auth.entity.User;
 public interface UserRepository extends JpaRepository<User, Long>{
     
     Optional<User> findByUsername(String username);
+    Optional<User> findByNickname(String nickname);
 }

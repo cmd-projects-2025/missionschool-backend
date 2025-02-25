@@ -21,6 +21,9 @@ public class UserService {
         if(userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new RuntimeException("이미 존재하는 사용자입니다.");
         }
+        if(userRepository.findByNickname(request.getNickname()).isPresent()) {
+            throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
