@@ -30,7 +30,7 @@ public class BulletinBoardController {
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Object> getBoardById(@PathVariable Long id) {
+    public ResponseEntity<Object> getBoardById(@PathVariable("id") Long id) {
         try {
             BulletinBoard board = bulletinBoardService.getBoardById(id);
             bulletinBoardService.increaseViewCount(id);
