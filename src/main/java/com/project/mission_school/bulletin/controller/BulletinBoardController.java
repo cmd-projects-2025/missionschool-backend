@@ -1,14 +1,27 @@
 package com.project.mission_school.bulletin.controller;
 
-import com.project.mission_school.bulletin.service.BulletinBoardService;
-import com.project.mission_school.bulletin.entity.BulletinBoard;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.project.mission_school.bulletin.entity.BulletinBoard;
+import com.project.mission_school.bulletin.service.BulletinBoardService;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +31,10 @@ public class BulletinBoardController {
     private final BulletinBoardService bulletinBoardService;
 
     @GetMapping
-    public ResponseEntity<List<BulletinBoard>> getAllBoard() {
-        List<BulletinBoard> boardList = bulletinBoardService.getAllBoards();
-        return ResponseEntity.ok(boardList);
+    public ResponseEntity<Page<BulletinBoard>> getAllBoard(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BulletinBoard> boardPage = bulletinBoardService.getAllBoards(pageable);
+        return ResponseEntity.ok(boardPage);
     }
 
     @GetMapping("/urgent")
