@@ -1,14 +1,18 @@
 package com.project.mission_school.bulletin.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.project.mission_school.bulletin.entity.BulletinBoard;
 import com.project.mission_school.bulletin.repository.BulletinBoardRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +38,8 @@ public class BulletinBoardService {
         return bulletinBoardRepository.save(postboard);
     }
 
-    public List<BulletinBoard> getAllBoards() {
-        return bulletinBoardRepository.findAll();
+    public Page<BulletinBoard> getAllBoards(Pageable pageable) {
+        return bulletinBoardRepository.findAll(pageable);
     }
 
     public BulletinBoard getBoardById(Long id) {
