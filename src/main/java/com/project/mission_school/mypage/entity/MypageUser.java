@@ -1,12 +1,5 @@
 package com.project.mission_school.mypage.entity;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "users")
 @Entity
-public class MypageUser implements UserDetails {
+public class MypageUser {
     @Id
     private Long id;
 
@@ -29,23 +22,23 @@ public class MypageUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role;
-
     @Column(nullable = true)
     private String phonenumber;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
+    @Column(nullable = true)
+    private String village;
+
     @Builder
-    public MypageUser(String username, String password, String role, String phonenumber) {
+    public MypageUser(Long id, String username, String password, String phonenumber, String nickname, String village) {
+        this.id = id;
         this.username = username;
         this.password = password;
-        this.role = (role != null) ? role : "USER";
         this.phonenumber = phonenumber;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        this.nickname = nickname;
+        this.village = village;
     }
 
     public void setUsername(String username) {
@@ -58,5 +51,13 @@ public class MypageUser implements UserDetails {
 
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
     }
 }
